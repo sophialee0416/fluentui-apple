@@ -64,6 +64,7 @@ open class PopupMenuController: DrawerController {
                 height += headerItem.cellClass.preferredHeight(for: headerItem)
             }
         }
+        height += filterView.frame.height
         for section in sections {
             height += PopupMenuSectionHeaderView.preferredHeight(for: section)
             for item in section.items {
@@ -98,6 +99,12 @@ open class PopupMenuController: DrawerController {
             }
         }
     }
+
+    @objc open func searchBar(isVisible: Bool, placeholderText: String? = "") {
+        searchBar.isHidden = !isVisible
+        searchBar.placeholderText = placeholderText
+    }
+
     /// Use `selectedItemIndexPath` to get or set the selected menu item instead of doing this via `PopupMenuItem` directly
     @objc open var selectedItemIndexPath: IndexPath? {
         get {
@@ -144,6 +151,7 @@ open class PopupMenuController: DrawerController {
         view.axis = .vertical
         view.addArrangedSubview(descriptionView)
         view.addArrangedSubview(headerView)
+        view.addArrangedSubview(filterView)
         view.addArrangedSubview(tableView)
         return view
     }()
@@ -193,6 +201,21 @@ open class PopupMenuController: DrawerController {
         view.isHeader = true
         view.isHidden = true
         return view
+    }()
+    private lazy var filterView: UIView = {
+        let view = UIStackView()
+        view.axis = .vertical
+        view.addArrangedSubview(searchBar)
+        view.isHidden = searchBar.isHidden
+        view.isLayoutMarginsRelativeArrangement = true
+        view.layoutMargins = UIEdgeInsets(top: 16, left: 16, bottom: 12, right: 16)
+        return view
+    }()
+    private let searchBar: SearchBar = {
+        let searchBar = SearchBar()
+        searchBar.style = .onSystemNavigationBar
+        searchBar.isHidden = true
+        return searchBar
     }()
     private let tableView = UITableView(frame: .zero, style: .grouped)
 
