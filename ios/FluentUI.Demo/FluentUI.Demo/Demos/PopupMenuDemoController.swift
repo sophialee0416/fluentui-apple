@@ -18,7 +18,6 @@ class PopupMenuDemoController: DemoController {
     private let navButtonTitleSwitch = BrandedSwitch()
     private let navButtonSubtitleSwitch = BrandedSwitch()
     private let toolbarSearchSwitch = BrandedSwitch()
-    private let toolbarPillButtonSwitch = BrandedSwitch()
     private let switchTextWidth: CGFloat = 150
 
     private var calendarLayout: CalendarLayout = .agenda
@@ -54,7 +53,6 @@ class PopupMenuDemoController: DemoController {
         navButtonSubtitleSwitch.isEnabled = false
         addTitle(text: "Toolbar Button Settings")
         addRow(text: "Show Search Bar", items: [toolbarSearchSwitch], textWidth: switchTextWidth)
-        addRow(text: "Show Pill Button Bar", items: [toolbarPillButtonSwitch], textWidth: switchTextWidth)
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -112,15 +110,6 @@ class PopupMenuDemoController: DemoController {
         let controller = PopupMenuController(barButtonItem: sender, presentationOrigin: origin, presentationDirection: .up)
         if toolbarSearchSwitch.isOn {
             controller.searchBar(isVisible: true, placeholderText: "test")
-        }
-        if toolbarPillButtonSwitch.isOn {
-            controller.pillButtonBarItems = [PillButtonBarItem(title: "All"),
-                                             PillButtonBarItem(title: "Documents"),
-                                             PillButtonBarItem(title: "People", isUnread: true),
-                                             PillButtonBarItem(title: "Other"),
-                                             PillButtonBarItem(title: "Templates"),
-                                             PillButtonBarItem(title: "Actions"),
-                                             PillButtonBarItem(title: "More")]
         }
 
         if sender.title == "1-line description" {

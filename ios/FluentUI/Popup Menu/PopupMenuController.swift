@@ -67,9 +67,6 @@ open class PopupMenuController: DrawerController {
         if !searchView.isHidden {
             height += searchView.frame.height
         }
-        if !pillButtonBarView.isHidden {
-            height += pillButtonBar.frame.height
-        }
         for section in sections {
             height += PopupMenuSectionHeaderView.preferredHeight(for: section)
             for item in section.items {
@@ -113,16 +110,6 @@ open class PopupMenuController: DrawerController {
 
     @objc open var searchText: String? {
         return searchBar.isHidden ? nil : searchBar.searchText
-    }
-
-    @objc open var pillButtonBarItems: [PillButtonBarItem]? {
-        didSet {
-            pillButtonBar.isHidden = true
-            if let pillButtonBarItems = pillButtonBarItems {
-                pillButtonBar.isHidden = false
-                pillButtonBar.items = pillButtonBarItems
-            }
-        }
     }
 
     /// Use `selectedItemIndexPath` to get or set the selected menu item instead of doing this via `PopupMenuItem` directly
@@ -172,7 +159,6 @@ open class PopupMenuController: DrawerController {
         view.addArrangedSubview(descriptionView)
         view.addArrangedSubview(headerView)
         view.addArrangedSubview(searchView)
-        view.addArrangedSubview(pillButtonBarView)
         view.addArrangedSubview(tableView)
         return view
     }()
@@ -232,25 +218,11 @@ open class PopupMenuController: DrawerController {
         view.layoutMargins = UIEdgeInsets(top: 16, left: 16, bottom: 12, right: 16)
         return view
     }()
-    private lazy var pillButtonBarView: UIView = {
-        let view = UIStackView()
-        view.axis = .vertical
-        view.addArrangedSubview(pillButtonBar)
-        view.isHidden = pillButtonBar.isHidden
-        view.isLayoutMarginsRelativeArrangement = true
-        view.layoutMargins = UIEdgeInsets(top: searchBar.isHidden ? 16 : 0, left: 0, bottom: 12, right: 0)
-        return view
-    }()
     private let searchBar: SearchBar = {
         let searchBar = SearchBar()
         searchBar.style = .onSystemNavigationBar
         searchBar.isHidden = true
         return searchBar
-    }()
-    private let pillButtonBar: PillButtonBar = {
-        let pillButtonBar = PillButtonBar(pillButtonStyle: .primary)
-        pillButtonBar.isHidden = true
-        return pillButtonBar
     }()
     private let tableView = UITableView(frame: .zero, style: .grouped)
 
