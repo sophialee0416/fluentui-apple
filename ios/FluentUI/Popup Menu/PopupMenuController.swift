@@ -64,8 +64,12 @@ open class PopupMenuController: DrawerController {
                 height += headerItem.cellClass.preferredHeight(for: headerItem)
             }
         }
-        height += searchView.frame.height
-        height += pillButtonBar.frame.height
+        if !searchView.isHidden {
+            height += searchView.frame.height
+        }
+        if !pillButtonBarView.isHidden {
+            height += pillButtonBar.frame.height
+        }
         for section in sections {
             height += PopupMenuSectionHeaderView.preferredHeight(for: section)
             for item in section.items {
@@ -168,11 +172,8 @@ open class PopupMenuController: DrawerController {
         view.addArrangedSubview(descriptionView)
         view.addArrangedSubview(headerView)
         view.addArrangedSubview(searchView)
-        view.addArrangedSubview(pillButtonBar)
+        view.addArrangedSubview(pillButtonBarView)
         view.addArrangedSubview(tableView)
-        if !pillButtonBar.isHidden {
-            view.setCustomSpacing(12, after: pillButtonBar)
-        }
         return view
     }()
 
@@ -229,6 +230,15 @@ open class PopupMenuController: DrawerController {
         view.isHidden = searchBar.isHidden
         view.isLayoutMarginsRelativeArrangement = true
         view.layoutMargins = UIEdgeInsets(top: 16, left: 16, bottom: 12, right: 16)
+        return view
+    }()
+    private lazy var pillButtonBarView: UIView = {
+        let view = UIStackView()
+        view.axis = .vertical
+        view.addArrangedSubview(pillButtonBar)
+        view.isHidden = pillButtonBar.isHidden
+        view.isLayoutMarginsRelativeArrangement = true
+        view.layoutMargins = UIEdgeInsets(top: searchBar.isHidden ? 16 : 0, left: 0, bottom: 12, right: 0)
         return view
     }()
     private let searchBar: SearchBar = {
