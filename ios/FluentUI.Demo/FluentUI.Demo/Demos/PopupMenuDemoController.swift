@@ -106,6 +106,13 @@ class PopupMenuDemoController: DemoController {
 
         let controller = PopupMenuController(barButtonItem: sender, presentationOrigin: origin, presentationDirection: .up)
         controller.searchBar(isVisible: true, placeholderText: "test")
+        controller.pillButtonBarItems = [PillButtonBarItem(title: "All"),
+                                         PillButtonBarItem(title: "Documents"),
+                                         PillButtonBarItem(title: "People", isUnread: true),
+                                         PillButtonBarItem(title: "Other"),
+                                         PillButtonBarItem(title: "Templates"),
+                                         PillButtonBarItem(title: "Actions"),
+                                         PillButtonBarItem(title: "More")]
 
         if sender.title == "1-line description" {
             controller.headerItem = PopupMenuItem(title: "Pick a calendar layout")

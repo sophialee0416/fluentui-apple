@@ -64,7 +64,8 @@ open class PopupMenuController: DrawerController {
                 height += headerItem.cellClass.preferredHeight(for: headerItem)
             }
         }
-        height += filterView.frame.height
+        height += searchView.frame.height
+        height += pillButtonBar.frame.height
         for section in sections {
             height += PopupMenuSectionHeaderView.preferredHeight(for: section)
             for item in section.items {
@@ -103,6 +104,21 @@ open class PopupMenuController: DrawerController {
     @objc open func searchBar(isVisible: Bool, placeholderText: String? = "") {
         searchBar.isHidden = !isVisible
         searchBar.placeholderText = placeholderText
+        adjustsHeightForKeyboard = true
+    }
+
+    @objc open var searchText: String? {
+        return searchBar.isHidden ? nil : searchBar.searchText
+    }
+
+    @objc open var pillButtonBarItems: [PillButtonBarItem]? {
+        didSet {
+            pillButtonBar.isHidden = true
+            if let pillButtonBarItems = pillButtonBarItems {
+                pillButtonBar.isHidden = false
+                pillButtonBar.items = pillButtonBarItems
+            }
+        }
     }
 
     /// Use `selectedItemIndexPath` to get or set the selected menu item instead of doing this via `PopupMenuItem` directly
@@ -151,8 +167,12 @@ open class PopupMenuController: DrawerController {
         view.axis = .vertical
         view.addArrangedSubview(descriptionView)
         view.addArrangedSubview(headerView)
-        view.addArrangedSubview(filterView)
+        view.addArrangedSubview(searchView)
+        view.addArrangedSubview(pillButtonBar)
         view.addArrangedSubview(tableView)
+        if !pillButtonBar.isHidden {
+            view.setCustomSpacing(12, after: pillButtonBar)
+        }
         return view
     }()
 
@@ -202,7 +222,7 @@ open class PopupMenuController: DrawerController {
         view.isHidden = true
         return view
     }()
-    private lazy var filterView: UIView = {
+    private lazy var searchView: UIView = {
         let view = UIStackView()
         view.axis = .vertical
         view.addArrangedSubview(searchBar)
@@ -216,6 +236,11 @@ open class PopupMenuController: DrawerController {
         searchBar.style = .onSystemNavigationBar
         searchBar.isHidden = true
         return searchBar
+    }()
+    private let pillButtonBar: PillButtonBar = {
+        let pillButtonBar = PillButtonBar(pillButtonStyle: .primary)
+        pillButtonBar.isHidden = true
+        return pillButtonBar
     }()
     private let tableView = UITableView(frame: .zero, style: .grouped)
 
